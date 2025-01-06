@@ -1,0 +1,274 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+
+    <%- include("./partials/head.ejs") %>
+
+<style>
+            .spinner {
+                    
+            width: 56px;
+            height: 56px;
+            margin-top:50px ;
+            border-radius: 50%;
+            background: conic-gradient(#0000 10%,#474bff);
+            -webkit-mask: radial-gradient(farthest-side,#0000 calc(100% - 9px),#000 0);
+            animation: spinner-zp9dbg 1s infinite linear;
+        }
+
+        #errorMessage {
+    display: none;
+    color: rgb(255, 247, 0);
+    text-align: center;
+    margin-top: 1rem;
+}
+
+@keyframes spinner-zp9dbg {
+   to {
+      transform: rotate(1turn);
+   }
+}
+
+@media (max-width: 768px) {
+    #myTable{
+        font-size: 10px
+    }
+    
+}
+    
+</style>
+<body>
+    <div class="container-fluid">
+        <div class="row">
+            <div class="col-lg-2" >
+                <%- include("./partials/nav.ejs") %>
+            </div>
+            <!--------------------END ASIDE  ------------------>
+                <!-- Modal -->
+                 <div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+                    <div class="modal-dialog">
+                    <div class="modal-content">
+                        <div class="modal-body" >
+                            <div id="carouselExampleControls" class="carousel slide" data-bs-ride="carousel">
+                                <div class="carousel-inner" id="HomeWorkPhotos">
+                               
+                                </div>
+                                <button class="carousel-control-prev" type="button" data-bs-target="#carouselExampleControls" data-bs-slide="prev">
+                                  <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+                                  <span class="visually-hidden">Previous</span>
+                                </button>
+                                <button class="carousel-control-next" type="button" data-bs-target="#carouselExampleControls" data-bs-slide="next">
+                                  <span class="carousel-control-next-icon" aria-hidden="true"></span>
+                                  <span class="visually-hidden">Next</span>
+                                </button>
+                              </div>                        
+                        </div>
+                     
+                    </div>
+                    </div>
+                 </div>
+                <!-- Modal -->
+            
+
+            <div class="col-lg-10 ">
+                
+                <main>
+                    <div class="row">
+                        <div class="col-md-12 ">
+                            <select name="Grde" id="Grade" class="Grade">
+                                <option value=""> اختر الصف الدراسي </option>
+                                <option  value="Grade0">الصف الثالث الاعدادي</option>
+                                <option value="Grade1">الصف الاول الثانوي</option>
+                                <option value="Grade2">الصف الثاني الثانوي </option>
+                                <option value="Grade3">الصف الثالث الثانوي</option>
+                            </select>
+                            <select name="homeWorkName" id="homeWorkName" class="Grade">
+                              
+                            </select>
+
+                          <button type="submit" id="GetAllStudent" class="btn btn-secondary btn-md me-3 mt-4"> Get Data</button>
+
+                        </div>
+                      
+                  
+                    </div>
+
+                    <div class="row">
+                        <div class="col-md-11  col-sm-12">
+                        <div class="student-table">
+                            
+                            <h2 class="mt-3 " style="text-align: center; " id="errorMessage" ></h2>
+
+                            <div class="spinner d-none mx-auto" id="spinnerInTabel"></div>
+
+
+                            <input type="text" class="mx-auto" id="searchBar" placeholder="بحث..">
+                            <table id="myTable">
+                                <thead>
+                                    <th style="padding-left: 20px;">اسم الطالب</th>
+                                    <th style="padding-left: 20px;">كود الطالب</th>
+                                    <th style="padding-left: 20px;"></th>
+                                    <th style="padding-left: 20px;"></th>
+                                </thead>
+                                <tbody id="tbody">
+                                  
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                  
+                    </div>
+                   
+                </main>
+
+            </div>
+
+            <!-------------------- END OF MAIN --------------------->
+         
+        </div>
+    </div>
+
+
+
+    <script src="../assest/bootstrap.bundle.min.js"></script>
+    <script src="../assest/bootstrap.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/3.9.1/chart.min.js" integrity="sha512-ElRFoEQdI5Ht6kZvyzXhYG9NqjtkmlkfYk0wr6wHxU9JEHakS7UJZNeml5ALk+8IKlU6jDgMabC3vkumRokgJA==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+
+
+    <script>
+        const spinner = document.getElementById('spinnerInTabel');
+        const errorMessage = document.getElementById('errorMessage');
+
+
+        const Grade = document.getElementById('Grade');
+      
+        Grade.addEventListener('change', async (e) => {
+            spinner.classList.remove('d-none');
+            spinner.se
+            const GradeValue = e.target.value;
+            const homeWorkName = document.getElementById('homeWorkName');
+           
+            homeWorkName.innerHTML = '';
+            const option = document.createElement('option');
+            option.value = '';
+            option.innerHTML = 'اختر اسم الواجب';
+            homeWorkName.appendChild(option);
+            const res = await fetch(`/teacher/homeWork/${GradeValue}`);
+            const data = await res.json();
+            console.log(data);
+     
+            data['videos'].forEach((homeWork) => {
+                const option = document.createElement('option');
+                option.value = homeWork._id;
+                option.innerHTML = homeWork.videoTitle;
+                homeWorkName.appendChild(option);
+            });
+            spinner.classList.add('d-none');
+        });
+
+        const GetStudent = document.getElementById('GetAllStudent');
+        GetStudent.addEventListener('click', async (e) => {
+            spinner.classList.remove('d-none');
+            const homeWorkName = document.getElementById('homeWorkName').value;
+            const Grade = document.getElementById('Grade').value;
+            const tbody = document.getElementById('tbody');
+            tbody.innerHTML = '';
+            
+            const res = await fetch(`/teacher/homeWork/${Grade}/${homeWorkName}`);
+            const data = await res.json();
+            console.log(data);
+            
+            data['students'].forEach((student) => {
+                let td = ''
+                console.log(student.videosInfo[0].isUploadedHWApproved);
+                if(student.videosInfo[0].isUploadedHWApproved){
+                    td = `<td><button class="btn btn-success " >تم القبول </button> </td>`
+                }else{
+                    td = ` <td><button class="btn btn-outline-warning accept-homework" data-id="${student.Code}">قبول الواجب</button></td>`
+                }
+
+                tbody.innerHTML += `
+                <tr>
+                    <td>${student.Username}</td>
+                    <td>${student.Code}</td>
+                    <td><button class="btn btn-secondary show-homework"  data-bs-toggle="modal" data-bs-target="#exampleModal"  data-id="${student.Code}">عرض الواجب</button></td>
+                    ${td}
+                </tr>
+                `;
+            });
+              spinner.classList.add('d-none');
+
+            // Add event listeners for عرض الواجب and قبول الواجب buttons
+            const showHomeworkButtons = document.querySelectorAll('.show-homework');
+            const acceptHomeworkButtons = document.querySelectorAll('.accept-homework');
+
+            showHomeworkButtons.forEach((button) => {
+      
+                button.addEventListener('click', async (e) => {
+            
+                    const studentCode = e.target.dataset.id;
+                    // Send request for the user's homework
+                    const homeworkRes = await fetch(`/teacher/homeWork/show/${homeWorkName}/${studentCode}`);
+                    const homeworkData = await homeworkRes.json();
+                    console.log(homeworkData);
+                    const HomeWorkPhotos = document.getElementById('HomeWorkPhotos');
+                    HomeWorkPhotos.innerHTML = '';
+                    homeworkData['HomeWorkPhotos'].forEach((photo, index) => {
+                        const div = document.createElement('div');
+                        div.classList.add('carousel-item');
+                        if (index === 0) {
+                            div.classList.add('active');
+                        }
+                        div.innerHTML = `
+                        <img src="${photo}" class="d-block w-100" alt="...">
+                        `;
+                        HomeWorkPhotos.appendChild(div);
+                    });
+                
+                    // Handle the response (e.g., display the homework data in the modal)
+                });
+     
+            });
+
+            acceptHomeworkButtons.forEach((button) => {
+             
+                button.addEventListener('click', async (e) => {
+                        spinner.classList.remove('d-none');
+                    const studentCode = e.target.dataset.id;
+                    // Send request to accept the user's homework
+                    const acceptRes = await fetch(`/teacher/homeWork/accept/${homeWorkName}/${studentCode}`);
+                    const acceptData = await acceptRes.json();
+                    
+                    if(acceptRes.ok){
+                        spinner.classList.add('d-none');
+                        errorMessage.style.display = 'block';
+                        errorMessage.innerHTML = 'تم قبول الواجب بنجاح';
+                        setTimeout(() => {
+                            errorMessage.style.display = 'none';
+                        }, 12000);
+                    }else{
+                        spinner.classList.add('d-none');
+                        errorMessage.style.display = 'block';
+                        errorMessage.innerHTML = 'حدث خطأ أثناء قبول الواجب';
+                        setTimeout(() => {
+                            errorMessage.style.display = 'none';
+                        }, 12000);
+                    }
+                  
+                    GetStudent.click();
+
+                    
+          
+                    // Handle the response (e.g., show a success message or update the UI)
+                });
+   
+            });
+        });
+
+      
+
+    </script>
+
+</body>
+
+
+</html>
