@@ -74,7 +74,7 @@ const poster_get = (req, res) => {
 
 const chapter_post = (req, res) => {
   const {
-    chapterName, chapterGrade, chapterAccessibility, chapterPrice,ARorEN
+    chapterName, chapterGrade, chapterAccessibility, chapterPrice
   } = req.body
 
   const chapter = new Chapter({
@@ -82,13 +82,13 @@ const chapter_post = (req, res) => {
     chapterGrade: chapterGrade || "",
     chapterAccessibility: chapterAccessibility || " ",
     chapterPrice: chapterPrice || 0,
-    ARorEN:ARorEN,
+    ARorEN:'AR',
     chapterLectures: [],
     chapterSummaries: [],
     chapterSolvings: [],
   })
 
-  if (!chapterName || !chapterGrade || !chapterAccessibility || !ARorEN) {
+  if (!chapterName || !chapterGrade || !chapterAccessibility ) {
     return res.status(400).send('Missing required fields');
   }
 
