@@ -119,19 +119,14 @@
               <div class="col-lg-9 mx-auto">
                 <div class="video">
                   <div class="container show-controls" dir="ltr" id="VideoEm">
-                    <div class="video-container">
+                   <div class="video-container">
+                    <% if (video.videoURL.startsWith('<iframe')||video.videoURL.startsWith('<div') ) { %>
+                      <%- video.videoURL %>
+                    <% }else { %>
+                    <iframe src="<%= video.videoURL %>" width="640" height="360" frameborder="0" allowfullscreen></iframe>
+                    <% } %>
+                  </div>
 
-
-                <% if (video.videoURL.length>100) {%>      
-                
-                  <%-    video.videoURL    %>          
-                    <% }else{%>
-                     <%-video.videoURL%>
-               <% } %>
-                 
-
-
-                    </div>
                 </div>
                 
                   <i class="watermark " id="watermark"></i>
@@ -153,26 +148,36 @@
 
                   </form>
 
-                  </li>                
+                  </li>
+               
+                    <% if (userData.Grade=="Grade1") { %>
+                         <li class="me-3">
+                       <a href="https://drive.google.com/drive/folders/1aRQO-tQIYPBD7uzSoyw_QSMxqft1QiwU?usp=sharing"> <button class="listbtn btn btn-outline-warning" >
+                     Download PDFs
+
+                    </button>
+                    </a>
+                  </li>
+                    <% } %>
+                   
                 </ul>
               </div>
 
 
-            <div class="col-md-6 mx-auto mb-5" style="display: none;" id="ShowUploadSec">
-                <div class="text-center">
-                    <div id="file-uploader" class="mt-5 file-uploader">
-                        <form>
-                        <div class="file-select  pt-1">
-                            <input type="file" id="file-input" multiple style="display: none;">
-                            <div class="file-select-button mx-auto" id="file-select-button">Select Files</div>
-                        </div>
-                        </form>
-                        <div id="file-list"></div>
-                        <button class="UploadBtn" id="UploadBtn"><i class="fa-solid fa-cloud-arrow-up"></i></button>
-                    </div>
-                </div>
-            </div>
-
+           <div class="col-md-6 mx-auto mb-5" style="display: none;" id="ShowUploadSec">
+              <div class="text-center">
+                  <div id="file-uploader" class="mt-5 file-uploader">
+                      <form>
+                          <div class="file-select pt-1">
+                              <input type="file" id="file-input" multiple style="display: none;" accept="image/*">
+                              <div class="file-select-button mx-auto" id="file-select-button">Select Photos</div>
+                          </div>
+                      </form>
+                      <div id="file-list"></div>
+                      <button class="UploadBtn" id="UploadBtn"><i class="fa-solid fa-cloud-arrow-up"></i></button>
+                  </div>
+              </div>
+          </div>
               </div>
             </div>
           </main>
@@ -269,7 +274,7 @@ async function uploFilesHomeWork() {
       () => {
         getDownloadURL(UploadTask.snapshot.ref).then((downloadURL) => {
           HomeWorkPhotos.push(downloadURL);
-          if (HomeWorkPhotos.length == files.length) {
+          if (HomeWorkPhotos.length == files.length&& HomeWorkPhotos.length!=0) {
             document.getElementById("ShowUploadSec").style.display = "none";
 
             fetch("", {
@@ -283,9 +288,12 @@ async function uploFilesHomeWork() {
             }).then(()=>{
               document.getElementById("HomeWorkSubmitbtn").click()
             }).catch((error)=>{
-              alert("error")
+              alert("يجب رفع الملفات مره اخري")
             })
 
+          }else{
+            alert("يجب رفع الملفات مره اخري")
+            return;
           }
         });
        
@@ -305,7 +313,25 @@ document.getElementById("UploadBtn").addEventListener('click',uploFilesHomeWork)
     <script>
       module = {};
     </script>
-   
+   <script src="https://cdn.jsdelivr.net/npm/hls.js@latest"></script>
+
+
+
+
+   <!-- <script>
+    const videoURL = <%- JSON.stringify(video.videoURL) %>;
+    const hls = new Hls();
+hls.loadSource(videoURL);
+hls.attachMedia(videoURL);
+
+hls.on(Hls.Events.ERROR, function(event, data) {
+  if (data.type === Hls.ErrorTypes.NETWORK_ERROR && data.details === Hls.ErrorDetails.KEY_LOAD_ERROR) {
+    console.warn('Key load error, attempting reload...');
+    hls.startLoad();  // Retry loading
+  }
+});
+
+   </script> -->
 
 
 
