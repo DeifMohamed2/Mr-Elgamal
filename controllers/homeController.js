@@ -181,17 +181,17 @@ const public_Register_post = async (req, res) => {
   let videosInfo = [];
 
   if (Grade === 'Grade1') {
-    await User.findOne({ Grade: Grade, Code: 991192 }).then((result) => {
+    await User.findOne({ Grade: Grade, Code: 846388 }).then((result) => {
       quizesInfo = result.quizesInfo;
       videosInfo = result.videosInfo;
     });
   } else if (Grade === 'Grade2') {
-    await User.findOne({ Grade: Grade, Code: 947579 }).then((result) => {
+    await User.findOne({ Grade: Grade, Code: 936235 }).then((result) => {
       quizesInfo = result.quizesInfo;
       videosInfo = result.videosInfo;
     });
   } else if (Grade === 'Grade3') {
-    await User.findOne({ Grade: Grade, Code: 868610 }).then((result) => {
+    await User.findOne({ Grade: Grade, Code: 815887 }).then((result) => {
       quizesInfo = result.quizesInfo;
       videosInfo = result.videosInfo;
     });

@@ -40,11 +40,7 @@ mongoose.connect(dbURI, { useNewUrlParser: true, useUnifiedTopology: true })
         io.on('connection', (socket) => {
             console.log(`New connection: ${socket.id}`);
         })
-
-
-        
-
-        console.log("listening on port 3903")
+        console.log("listening on port 7903")
     }).catch((err) => {
         console.log(err)
     })
